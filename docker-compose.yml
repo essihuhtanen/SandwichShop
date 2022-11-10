@@ -1,0 +1,97 @@
+# This is the docker-compose-yml file that must be able to start
+# your group's backend.
+
+
+version: "3"
+
+services:
+
+  # Build an image from server a 
+  # Container-name instead of image, because the image is built in the build-section.
+  server-a:
+    container_name: server-a
+    depends_on:
+      - rapid-runner-rabbit
+      - mongo_db
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
+    build:
+      dockerfile: Dockerfile
+      context: ./backend/server-a
+    environment:
+      - MONGO_URI=mongodb://mongo_db:27017/mongo_database
+    ports:
+      - "3000:8080"
+    links:
+      - mongo_db
+    networks:
+      - backend
+    volumes:
+      - server:/server
+
+  rapid-runner-rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+    expose:
+      - '15672'
+    networks:
+      - backend
+
+
+  server-b:
+    container_name: server-b
+    depends_on:
+      - rapid-runner-rabbit
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
+    build:
+      dockerfile: Dockerfile
+      context: ./backend/server-b
+    ports:
+      - '8080:8080'
+    networks:
+      - backend
+
+# Database used to store all data: users, orders, sandwiches, toppings.. 
+  mongo_db:
+    container_name: mongo
+    image: mongo:4.4.9
+    ports:
+      - '27017:27017'
+    networks:
+      - backend
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin_user
+      - MONGO_INITDB_ROOT_PASSWORD=admin_pass
+      - MONGO_INITDB_DATABASE=admin
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+      # Initial data of toppings, sandwiches and users is saved to the database at start-up
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+  
+  # Frontend
+  frontend:
+    container_name: react_ui
+    # Depends_on server-a and server b ensures that frontend starts after these services.
+    # Starting it up at the same time can slow down everything else so that servers A or B might
+    # suffer from time out from rabbit's delayed start.
+    depends_on:
+      - server-a
+      - server-b
+    build: ./frontend
+    ports:
+      - '3001:4000'
+    stdin_open: true
+    tty: true
+
+      
+# Here we create a named network, that all the backend components
+# must be added to for them to be able to communicate through
+# exposed ports.
+networks:
+  backend:
+
+volumes:
+  server:
+  mongodb:
+  mongodb_config:

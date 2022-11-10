@@ -1,0 +1,33 @@
+.ordered-items {
+    margin: 30px 20px 10px 20px;
+}
+
+.ordered-items-header {
+    text-transform: uppercase;
+    color: rgb(31, 185, 31);
+    font-size: 22px;    
+}
+
+.no-orders {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ordered-items-list {
+    padding-top: 15px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 2px solid darkgrey;
+}
+
+.order-details-header {
+    font-size: 20px;
+    color: rgb(31, 185, 31);
+}
+
+.selected-sandwich-header {
+    font-size: 16px;
+    color: rgb(31, 185, 31);
+}

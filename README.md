@@ -14,3 +14,7 @@ The entire application can be started with Docker by running the command "docker
 The project has been carried out with two other students, Melina Aalto-Halme (melina.aalto-halme@tuni.fi) and Teemu Harju (teemu.j.harju@tuni.fi).
 
 My contribution to the project is on the back-end side, implementing partially server A, fully server B and the message queue functionality.
+
+### Tip for fixing possible error
+
+In case you run into an error "/usr/bin/env: 'bash\r': No such file or directory" caused by line endings, please see https://stackoverflow.com/questions/29045140/env-bash-r-no-such-file-or-directory.
