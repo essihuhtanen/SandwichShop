@@ -15,6 +15,6 @@ The project has been carried out with two other students, Melina Aalto-Halme (me
 
 My contribution to the project is on the back-end side, implementing partially server A, fully server B and the message queue functionality.
 
-### Tip for fixing possible error
+## Tip for fixing possible error
 
 In case you run into an error "/usr/bin/env: 'bash\r': No such file or directory" caused by line endings, please see https://stackoverflow.com/questions/29045140/env-bash-r-no-such-file-or-directory.
